@@ -1,66 +1,42 @@
-import { useState, useRef} from "react";
-import "./Editor.css"
+import { useState, useRef, useContext } from "react";
+import "./Editor.css";
+import { TodoDispatcherContext } from "../App";
 
+const Editor = () =>{
+    // 구조분해 할당으로 {onCreate}만 받아온다.
+    const {onCreate} = useContext(TodoDispatcherContext);       
 
-
-const Editor = ({onCreate}) => {
-
-
-    // 문제1. input에 아무것도 입력하지 않았을 때, 버튼을 눌러도 입력X, foucs하도록.
-    // 문제2. 데이터가 입력 후 입력 폼 지우기
-    // 문제3. 추가버튼 클릭하지 않고, 엔터 이벤트 넣기
-
-
-    // input 박스에 onChange 이벤트를 주고,
-    // 이벤트가 발생할 때 마다 입력된 content 값을
-    // useState 훅 값을 가지고 있는 처리.
-
-    // function useContent() {
-    //     const [content, setContent] = useState();     // 빈 값을 기본값으로 세팅.
-    //     const onChange = (e) => {
-    //         setContent(e.target.value);
-    //     }
-
-    //     return [content, onChange];
-    // }
-
+    const [content, setContent] = useState("");
     const contentRef = useRef();
-    const [content, setContent] = useState("");     // 빈 값을 기본값으로 세팅.
-    const onChangeContent = (e) => {
+
+    const onChangeContent = (e) =>{
         setContent(e.target.value);
     }
-
-    
-
-    const onSubmit = () => {
-
-        if (content == "") {
-            alert("할 일을 입력해주세요!") 
+    const onSubmit = () =>{
+        if( content == "" ){
             contentRef.current.focus();
-         
-        } else {
+            // alert("할일을 입력해 주세요!");
+            return;
+        }
         onCreate(content);
         setContent("");
-        }
     }
- 
-    const onKeyDown = (e) => {
-        if(e.keyCode == 13) {       // 엔터
+
+    const onKeyDown = (e) =>{
+        if(e.keyCode == 13){    // enter
             onSubmit();
         }
     }
 
-
     return (
         <div className="Editor">
             <input 
-                ref={contentRef}  
-                value = {content} 
-                placeholder="새로운 todoList..."  
-                onChange={onChangeContent}
-                onKeyDown={onKeyDown}/>
-            <button onClick={onSubmit} >추가</button>
-            
+                ref={contentRef} 
+                value={content} 
+                onChange={onChangeContent} 
+                onKeyDown={onKeyDown}
+                placeholder="새로운 todolist..."/>
+            <button onClick={onSubmit}>추가</button>
         </div>
     );
 }
