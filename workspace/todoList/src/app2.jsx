@@ -1,11 +1,9 @@
-import Example from "./components/Example";
+import Exam from "./components/Exam";
 
-const App2 = () => {
+const App2 = () =>{
     return (
-        <div>
-            <Example/>
-        </div>
+        <div><Exam/></div>
     );
 }
 
-export default App2
+export default App2;
