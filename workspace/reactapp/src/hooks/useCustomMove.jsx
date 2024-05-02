@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 
 
@@ -13,6 +14,10 @@ const useCustomMove = () => {
     const navigate = useNavigate();
 
     const [queryParams] = useSearchParams();
+
+    // moveToList 가 호출이 되면 true -> false, false -> true
+    const [refresh, setRefresh] = useState(false);
+
 
     const page = getNum(queryParams.get('page'), 1);
     const size = getNum(queryParams.get('size'), 10);
@@ -30,7 +35,9 @@ const useCustomMove = () => {
         } else {        // page 와 size 가 없다면
             queryStr = queryDefault;
         }
-        navigate({pathname:`../list`, search:queryDefault});
+        
+        setRefresh(!refresh);
+        navigate({pathname:`../list`, search:queryStr});
     }
 
     // 수정 페이지 이동
@@ -41,8 +48,17 @@ const useCustomMove = () => {
         });
     }
 
+
+    const moveToRead = (num) => {
+        navigate({
+            pathname : `../read/${num}`,
+            search:queryDefault
+        });
+    }
+
+
     // 객체로 여러개를 return할 예정이라, 객체로 작업
-    return {moveToList, moveToModify, page, size};
+    return {moveToList, moveToModify, moveToRead, page, size, refresh};
 
 }
 
